@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: service_usuario
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${MYSQL_DATABASE}?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+
+  config:
+    import: file:.env[.properties]
+
+server:
+  port: {SERVER_PORT}
