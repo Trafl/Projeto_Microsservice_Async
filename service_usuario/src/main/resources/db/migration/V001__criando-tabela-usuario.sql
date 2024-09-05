@@ -4,6 +4,6 @@ CREATE TABLE usuarios (
     cpf VARCHAR(50),
     password VARCHAR(200),
     data_criacao DATE,
-    date_atualizacao DATE,
+    data_atualizacao DATE,
     eh_admin BOOLEAN
 );
