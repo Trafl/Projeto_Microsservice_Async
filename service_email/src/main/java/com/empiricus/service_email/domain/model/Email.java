@@ -22,6 +22,6 @@ public class Email {
 
     private String email;
 
-    private LocalDate data_criacao;
+    private LocalDate data_criacao = LocalDate.now();
 
 }
