@@ -10,6 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class UsuarioMapper {
@@ -18,6 +20,10 @@ public class UsuarioMapper {
 
     public UsuarioDTOOutput toDTO (Usuario usuario){
         return mapper.map(usuario, UsuarioDTOOutput.class);
+    }
+
+    public List<UsuarioDTOOutput> toListDto(List<Usuario> usuarios){
+        return usuarios.stream().map(usuario -> mapper.map(usuario, UsuarioDTOOutput.class)).toList();
     }
 
     public Usuario toModel (UsuarioDTOInput input){

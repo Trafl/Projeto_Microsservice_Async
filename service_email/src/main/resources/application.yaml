@@ -11,7 +11,7 @@ spring:
       import: file:.env[.properties]
 
   server:
-    port: { SERVER_PORT }
+    port: {SERVER_PORT}
 
   eureka:
     client:

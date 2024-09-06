@@ -1,7 +1,6 @@
 package com.empiricus.service_email.domain.service.notification;
 
 import com.empiricus.service_email.domain.model.Email;
-import com.empiricus.service_email.domain.service.notification.NotificationService;
 import com.empiricus.service_email.domain.service.openfeign.UsuarioFeignService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -45,7 +44,7 @@ public class NotificationServiceImpl implements NotificationService {
                 email.getData_criacao()
         );
 
-        enviarEmailParaAdmins(subject, body);
+        sendEmailsForAdmins(subject, body);
     }
 
     @Override
@@ -69,12 +68,14 @@ public class NotificationServiceImpl implements NotificationService {
                 LocalDateTime.now()
         );
 
-        enviarEmailParaAdmins(subject, body);
+        sendEmailsForAdmins(subject, body);
 
     }
 
     @Async
-    private void enviarEmailParaAdmins(String subject, String body) {
+    private void sendEmailsForAdmins(String subject, String body) {
+
+        log.info("[{}] - [NotificationServiceImpl] - executando sendEmailsForAdmins()", LocalDateTime.now());
 
         List<String> adminEmails = findAdminEmails();
 
@@ -85,16 +86,12 @@ public class NotificationServiceImpl implements NotificationService {
             message.setText(body);
             mailSender.send(message);
 
-            log.info("[{}] - [NotificationServiceImpl] - Email enviado", LocalDateTime.now());
+            log.info("[{}] - [NotificationServiceImpl] - Email enviado para o email: {}", LocalDateTime.now(), adminEmail);
         }
 
     }
 
     private List<String> findAdminEmails(){
-        //chamada no kafka para pegar id de usuarios administradores
-
-        //chamada no serviço de email para recuperar o email de admin e depois enviar
-
-        return null;
+        return usuarioFeignService.getAdmins();
     }
 }

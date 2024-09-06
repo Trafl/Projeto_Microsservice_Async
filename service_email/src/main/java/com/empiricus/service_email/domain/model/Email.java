@@ -1,9 +1,6 @@
 package com.empiricus.service_email.domain.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +11,7 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @NoArgsConstructor
+@Table(name = "email")
 public class Email {
 
     @Id
@@ -26,5 +24,4 @@ public class Email {
 
     private LocalDate data_criacao;
 
-    private LocalDate data_atualizacao;
 }

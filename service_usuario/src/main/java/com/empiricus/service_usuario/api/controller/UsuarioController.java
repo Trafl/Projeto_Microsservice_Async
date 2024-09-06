@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuario")
@@ -42,6 +43,15 @@ public class UsuarioController {
         var pagedModel = pagedResourcesAssembler.toModel(pageUsuarioDTO);
 
         return ResponseEntity.ok(pagedModel);
+    }
+
+    @GetMapping("/admins")
+    ResponseEntity<List<UsuarioDTOOutput>> getAdmins(HttpServletRequest request){
+        log.info("[{}] - [UsuarioController] IP: {}, Request: GET, EndPoint: '/api/usuario'", LocalDateTime.now(), request.getRemoteAddr());
+        var pageUsuario = service.getAdmins();
+        var listUsuarioDTO = mapper.toListDto(pageUsuario);
+
+        return ResponseEntity.ok(listUsuarioDTO);
     }
 
     @GetMapping("/{usuarioId}")

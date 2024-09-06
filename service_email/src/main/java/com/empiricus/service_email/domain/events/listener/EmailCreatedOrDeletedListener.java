@@ -16,19 +16,19 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class EmailCreatedOrDeletedListener {
 
-    private final NotificationService service;
+    private final NotificationService notificationService;
 
     @Async
     @EventListener
     public void eventNotificationCreated(EmailCreated event){
         log.info("[{}] - [EmailCreatedOrDeletedListener] - disparando evento EmailCreated", LocalDateTime.now());
-        service.notifyAdminsEmailCreated(event.getEmail());
+        notificationService.notifyAdminsEmailCreated(event.getEmail());
     }
 
     @Async
     @EventListener
     public void eventNotificationDeleted(EmailDeleted event){
         log.info("[{}] - [EmailCreatedOrDeletedListener] - disparando evento EmailDeleted", LocalDateTime.now());
-        service.notifyAdminsEmailDeleted(event.getEmail());
+        notificationService.notifyAdminsEmailDeleted(event.getEmail());
     }
 }

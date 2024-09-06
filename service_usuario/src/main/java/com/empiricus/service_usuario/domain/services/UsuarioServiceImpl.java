@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Log4j2
@@ -20,8 +21,6 @@ import java.time.LocalDateTime;
 public class UsuarioServiceImpl implements UsuarioService{
 
     private final UsuarioRepository repository;
-    
-
 
     @Override
     public Page<Usuario> getAll(Pageable pageable) {
@@ -73,7 +72,12 @@ public class UsuarioServiceImpl implements UsuarioService{
     @Override
     public boolean usuarioExist(Long id) {
         log.info("[{}] - [UsuarioServiceImpl] - executando usuarioExist() id: {}", LocalDateTime.now(), id);
-        return repository.existById(id);
+        return repository.existsById(id);
+    }
+
+    public List<Usuario> getAdmins(){
+        log.info("[{}] - [UsuarioServiceImpl] - executando findAdmins()", LocalDateTime.now());
+        return repository.findAdmins();
     }
 
     private void updateUsuario(Usuario usuarioAtualizado, Usuario usuarioSalvo) {

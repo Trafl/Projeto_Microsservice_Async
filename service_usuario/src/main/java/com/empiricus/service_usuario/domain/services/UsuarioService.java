@@ -4,6 +4,8 @@ import com.empiricus.service_usuario.domain.model.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface UsuarioService {
 
     public Page<Usuario> getAll(Pageable pageable);
@@ -17,4 +19,6 @@ public interface UsuarioService {
     public void deleteUser(Long id);
 
     public boolean usuarioExist(Long id);
+
+    public List<Usuario> getAdmins();
 }
