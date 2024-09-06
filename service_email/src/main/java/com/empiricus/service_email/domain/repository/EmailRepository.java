@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface EmailRepository extends JpaRepository<Email, Long> {
 
-    Optional<Page<Email>> getAllEmailsByUsuarioId(Long usuarioId, Pageable pageable);
+    @Query("SELECT e FROM Email e WHERE e.usuario_id = :usuario_id")
+    Optional<Page<Email>> getAllEmailsByUsuario_Id(@Param("usuario_id") Long usuario_id, Pageable pageable);
 
 }

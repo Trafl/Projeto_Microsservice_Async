@@ -1,6 +1,6 @@
-package com.empiricus.service_email.domain.service.notification;
+package com.empiricus.service_notificacao.domain.service.notification;
 
-import com.empiricus.service_email.domain.model.Email;
+import com.empiricus.service_notificacao.domain.model.Email;
 
 public interface NotificationService {
 

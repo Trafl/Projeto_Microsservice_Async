@@ -1,7 +1,8 @@
-package com.empiricus.service_email.domain.service.notification;
+package com.empiricus.service_notificacao.domain.service.notification;
 
-import com.empiricus.service_email.domain.model.Email;
-import com.empiricus.service_email.domain.service.openfeign.UsuarioFeignService;
+import com.empiricus.service_notificacao.domain.model.Email;
+import com.empiricus.service_notificacao.domain.service.feing.UsuarioFeignService;
+import com.empiricus.service_notificacao.domain.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.SimpleMailMessage;
@@ -12,15 +13,14 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
-@Log4j2
 public class NotificationServiceImpl implements NotificationService {
 
     private final JavaMailSender mailSender;
 
     private final UsuarioFeignService usuarioFeignService;
-
     @Override
     public void notifyAdminsEmailCreated(Email email) {
         log.info("[{}] - [NotificationServiceImpl] - executando notifyAdminsEmailCreated()", LocalDateTime.now());

@@ -1,10 +1,10 @@
-package com.empiricus.service_email;
+package com.empiricus.service_notificacao;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ServiceEmailApplicationTests {
+class ServiceNotificacaoApplicationTests {
 
 	@Test
 	void contextLoads() {

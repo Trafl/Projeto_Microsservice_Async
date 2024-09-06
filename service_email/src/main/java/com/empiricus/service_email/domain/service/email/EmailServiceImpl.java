@@ -5,7 +5,6 @@ import com.empiricus.service_email.domain.events.event.EmailDeleted;
 import com.empiricus.service_email.domain.exception.UsuarioOrEmailNotFound;
 import com.empiricus.service_email.domain.model.Email;
 import com.empiricus.service_email.domain.repository.EmailRepository;
-import com.empiricus.service_email.domain.service.email.EmailService;
 import com.empiricus.service_email.domain.service.openfeign.UsuarioFeignService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +31,7 @@ public class EmailServiceImpl implements EmailService {
     public Page<Email> getAllEmailsOfUsuario(Long usuarioId, Pageable pageable) {
         log.info("[{}] - [EmailServiceImpl] - executando getAllEmailsOfUsuario(), usuario de id: {}", LocalDateTime.now(), usuarioId);
 
-        var emailsPage = repository.getAllEmailsByUsuarioId(usuarioId, pageable)
+        var emailsPage = repository.getAllEmailsByUsuario_Id(usuarioId, pageable)
                 .orElseThrow(()-> new UsuarioOrEmailNotFound(
                         String.format("Não foi encontrado nenhum usuario de id: %d associado a um ou mais emails",usuarioId)));
 

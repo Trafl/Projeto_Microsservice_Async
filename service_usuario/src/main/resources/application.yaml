@@ -1,6 +1,6 @@
 spring:
   application:
-    name: service_usuario
+    name: service-usuario
 
   datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${MYSQL_DATABASE}?createDatabaseIfNotExist=true&serverTimezone=UTC
@@ -11,7 +11,7 @@ spring:
     import: file:.env[.properties]
 
 server:
-  port: {SERVER_PORT}
+  port: 0
 
 eureka:
   client:
