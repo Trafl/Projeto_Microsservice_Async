@@ -1,10 +1,12 @@
-package com.empiricus.service_email.domain.service;
+package com.empiricus.service_email.domain.service.email;
 
 import com.empiricus.service_email.domain.events.event.EmailCreated;
 import com.empiricus.service_email.domain.events.event.EmailDeleted;
 import com.empiricus.service_email.domain.exception.UsuarioOrEmailNotFound;
 import com.empiricus.service_email.domain.model.Email;
 import com.empiricus.service_email.domain.repository.EmailRepository;
+import com.empiricus.service_email.domain.service.email.EmailService;
+import com.empiricus.service_email.domain.service.openfeign.UsuarioFeignService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -18,11 +20,13 @@ import java.time.LocalDateTime;
 @Log4j2
 @Service
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService{
+public class EmailServiceImpl implements EmailService {
 
     private final ApplicationEventPublisher publisher;
 
     private final EmailRepository repository;
+
+    private final UsuarioFeignService usuarioFeignService;
 
     @Override
     public Page<Email> getAllEmailsOfUsuario(Long usuarioId, Pageable pageable) {
@@ -30,7 +34,7 @@ public class EmailServiceImpl implements EmailService{
 
         var emailsPage = repository.getAllEmailsByUsuarioId(usuarioId, pageable)
                 .orElseThrow(()-> new UsuarioOrEmailNotFound(
-                        String.format("Não foi encontrado nenhum usuario associado a um ou mais emails")));
+                        String.format("Não foi encontrado nenhum usuario de id: %d associado a um ou mais emails",usuarioId)));
 
         return emailsPage;
     }
@@ -38,6 +42,12 @@ public class EmailServiceImpl implements EmailService{
     @Override
     @Transactional
     public Email createEmail(Email email) {
+
+        if(!usuarioFeignService.usuarioExist(email.getUsuario_id())){
+            new UsuarioOrEmailNotFound(
+                    String.format("Não foi encontrado nenhum usuario com o id: %d",email.getUsuario_id()));
+        }
+
         log.info("[{}] - [EmailServiceImpl] - executando createEmail(), usuario de id: {}", LocalDateTime.now(), email.getUsuario_id());
         var saveEmail = repository.save(email);
         log.info("[{}] - [EmailServiceImpl] - Email salvo com sucesso para usuario de id: {}", LocalDateTime.now(), email.getUsuario_id());

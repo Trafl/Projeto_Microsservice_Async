@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: service_email
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${MYSQL_DATABASE}?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+
+    config:
+      import: file:.env[.properties]
+
+  server:
+    port: { SERVER_PORT }
+
+  eureka:
+    client:
+      service-url:
+        defaultZone: http://localhost:8761/eureka
+      register-with-eureka: true
+      fetch-registry: true

@@ -1,11 +1,10 @@
-package com.empiricus.service_email.domain.service;
+package com.empiricus.service_email.domain.service.notification;
 
 import com.empiricus.service_email.domain.model.Email;
-import com.empiricus.service_email.domain.model.Usuario;
+import com.empiricus.service_email.domain.service.notification.NotificationService;
+import com.empiricus.service_email.domain.service.openfeign.UsuarioFeignService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.cglib.core.Local;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
@@ -17,16 +16,17 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class NotificationServiceImpl implements NotificationService{
+public class NotificationServiceImpl implements NotificationService {
 
     private final JavaMailSender mailSender;
+
+    private final UsuarioFeignService usuarioFeignService;
 
     @Override
     public void notifyAdminsEmailCreated(Email email) {
         log.info("[{}] - [NotificationServiceImpl] - executando notifyAdminsEmailCreated()", LocalDateTime.now());
 
-        // chama sincrona no serviço de usuario OpenFeing(email.getUsuario_id)
-        Usuario usuario = new Usuario();
+        var usuario = usuarioFeignService.getOneUsuario(email.getUsuario_id());
 
         String subject = String.format("O email %s foi criado/alterado para o" +
                 "usuário de CPF %d", email.getEmail(),usuario.getCpf());
@@ -52,8 +52,7 @@ public class NotificationServiceImpl implements NotificationService{
     public void notifyAdminsEmailDeleted(Email email) {
         log.info("[{}] - [NotificationServiceImpl] - executando notifyAdminsEmailDeleted()", LocalDateTime.now());
 
-        // chama sincrona no serviço de usuario OpenFeing(email.getUsuario_id)
-        Usuario usuario = new Usuario();
+        var usuario = usuarioFeignService.getOneUsuario(email.getUsuario_id());
 
         String subject = String.format("O email %s foi criado/alterado para o" +
                 "usuário de CPF %d", email.getEmail(),usuario.getCpf());

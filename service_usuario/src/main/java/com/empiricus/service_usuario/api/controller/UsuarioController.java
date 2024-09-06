@@ -32,11 +32,10 @@ public class UsuarioController {
 
     private final PagedResourcesAssembler<UsuarioDTOOutput> pagedResourcesAssembler;
 
-    private final String logTime = LocalDateTime.now().toString();
 
     @GetMapping
     ResponseEntity<PagedModel<EntityModel<UsuarioDTOOutput>>> getAll(@PageableDefault(size = 10) Pageable pageable, HttpServletRequest request){
-        log.info("[{}] - [UsuarioController] IP: {}, Request: GET, EndPoint: '/api/usuario'", logTime, request.getRemoteAddr());
+        log.info("[{}] - [UsuarioController] IP: {}, Request: GET, EndPoint: '/api/usuario'", LocalDateTime.now(), request.getRemoteAddr());
         var pageUsuario = service.getAll(pageable);
         var pageUsuarioDTO = mapper.toPageDto(pageUsuario);
 
@@ -47,7 +46,7 @@ public class UsuarioController {
 
     @GetMapping("/{usuarioId}")
     ResponseEntity<UsuarioDTOOutput> getOne(@PathVariable Long usuarioId, HttpServletRequest request){
-        log.info("[{}] - [UsuarioController] IP: {}, Request: GET, EndPoint: '/api/usuario/{}'", logTime, request.getRemoteAddr(), usuarioId);
+        log.info("[{}] - [UsuarioController] IP: {}, Request: GET, EndPoint: '/api/usuario/{}'", LocalDateTime.now(), request.getRemoteAddr(), usuarioId);
         var usuario = service.getOne(usuarioId);
         var usuarioDto = mapper.toDTO(usuario);
 
@@ -56,7 +55,7 @@ public class UsuarioController {
 
     @PostMapping
     ResponseEntity<UsuarioDTOOutput> addUser(@RequestBody @Valid UsuarioDTOInput input, HttpServletRequest request){
-        log.info("[{}] - [UsuarioController] IP: {}, Request: POST, EndPoint: '/api/usuario'", logTime, request.getRemoteAddr());
+        log.info("[{}] - [UsuarioController] IP: {}, Request: POST, EndPoint: '/api/usuario'", LocalDateTime.now(), request.getRemoteAddr());
         var usuarioInput = mapper.toModel(input);
         var usuario = service.addUser(usuarioInput);
         var usuarioDto = mapper.toDTO(usuario);
@@ -66,7 +65,7 @@ public class UsuarioController {
 
     @PutMapping("/{usuarioId}")
     ResponseEntity<UsuarioDTOOutput> updateUser(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioUpdateDTOInput input, HttpServletRequest request){
-        log.info("[{}] - [UsuarioController] IP: {}, Request: PUT, EndPoint: '/api/usuario/{}'", logTime, request.getRemoteAddr(), usuarioId);
+        log.info("[{}] - [UsuarioController] IP: {}, Request: PUT, EndPoint: '/api/usuario/{}'", LocalDateTime.now(), request.getRemoteAddr(), usuarioId);
         var usuarioInput = mapper.toModelUpdate(input);
         var usuario = service.updateUser(usuarioInput, usuarioId);
         var usuarioDto = mapper.toDTO(usuario);
@@ -76,9 +75,17 @@ public class UsuarioController {
 
     @DeleteMapping("/{usuarioId}")
     ResponseEntity<Void> deleteUser(@PathVariable Long usuarioId, HttpServletRequest request){
-        log.info("[{}] - [UsuarioController] IP: {}, Request: DELETE, EndPoint: '/api/usuario/{}'", logTime, request.getRemoteAddr(), usuarioId);
+        log.info("[{}] - [UsuarioController] IP: {}, Request: DELETE, EndPoint: '/api/usuario/{}'", LocalDateTime.now(), request.getRemoteAddr(), usuarioId);
         service.deleteUser(usuarioId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/{usuarioId}/exist")
+    ResponseEntity<Boolean> usuarioExist(@PathVariable Long usuarioId, HttpServletRequest request){
+        log.info("[{}] - [UsuarioController] IP: {}, Request: GET, EndPoint: '/api/usuario/{}/exist'", LocalDateTime.now(), request.getRemoteAddr(), usuarioId);
+        var exist = service.usuarioExist(usuarioId);
+
+        return ResponseEntity.ok(exist);
     }
 }

@@ -1,4 +1,4 @@
-package com.empiricus.service_email.domain.service;
+package com.empiricus.service_email.domain.service.email;
 
 import com.empiricus.service_email.domain.model.Email;
 import org.springframework.data.domain.Page;

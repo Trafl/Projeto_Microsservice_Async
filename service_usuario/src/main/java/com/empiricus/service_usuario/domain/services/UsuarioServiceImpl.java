@@ -21,17 +21,17 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     private final UsuarioRepository repository;
     
-    private final String logTime = LocalDateTime.now().toString();
+
 
     @Override
     public Page<Usuario> getAll(Pageable pageable) {
-        log.info("[{}] - [UsuarioImpl] - executando getAll()", logTime);
+        log.info("[{}] - [UsuarioServiceImpl] - executando getAll()", LocalDateTime.now());
         return repository.findAll(pageable);
     }
 
     @Override
     public Usuario getOne(Long id) {
-        log.info("[{}] - [UsuarioImpl] - executando getOne() id: {}", logTime, id);
+        log.info("[{}] - [UsuarioServiceImpl] - executando getOne() id: {}", LocalDateTime.now(), id);
         return repository.findById(id).orElseThrow(
                 () -> {
                   return new UsuarioNotFoundException(
@@ -42,32 +42,38 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     @Override
     public Usuario addUser(Usuario usuario) {
-        log.info("[{}] - [UsuarioImpl] - executando addUser()", logTime);
+        log.info("[{}] - [UsuarioServiceImpl] - executando addUser()", LocalDateTime.now());
         var novoUsuario = repository.save(usuario);
-        log.info("[{}] - [UsuarioImpl] - Usuario adicionado com sucesso id: {}", logTime, novoUsuario.getId());
+        log.info("[{}] - [UsuarioServiceImpl] - Usuario adicionado com sucesso id: {}", LocalDateTime.now(), novoUsuario.getId());
         return novoUsuario;
     }
 
     @Override
     @Transactional
     public Usuario updateUser(Usuario usuarioAtualizado, Long id) {
-        log.info("[{}] - [UsuarioImpl] - executando updateUser() id: {}", logTime, id);
+        log.info("[{}] - [UsuarioServiceImpl] - executando updateUser() id: {}", LocalDateTime.now(), id);
         var usuarioSalvo = getOne(id);
 
         updateUsuario(usuarioAtualizado, usuarioSalvo);
 
         usuarioSalvo.setData_atualizacao(LocalDate.now());
 
-        log.info("[{}] - [UsuarioImpl] - Usuario Atualizado com sucesso id: {}", logTime, usuarioSalvo.getId());
+        log.info("[{}] - [UsuarioServiceImpl] - Usuario Atualizado com sucesso id: {}", LocalDateTime.now(), usuarioSalvo.getId());
         return usuarioSalvo;
     }
 
     @Override
     public void deleteUser(Long id) {
-        log.info("[{}] - [UsuarioImpl] - executando deleteUser() id: {}", logTime, id);
+        log.info("[{}] - [UsuarioServiceImpl] - executando deleteUser() id: {}", LocalDateTime.now(), id);
         getOne(id);
         repository.deleteById(id);
-        log.info("[{}] - [UsuarioImpl] - Usuario deletado com sucesso id: {}", logTime, id);
+        log.info("[{}] - [UsuarioServiceImpl] - Usuario deletado com sucesso id: {}", LocalDateTime.now(), id);
+    }
+
+    @Override
+    public boolean usuarioExist(Long id) {
+        log.info("[{}] - [UsuarioServiceImpl] - executando usuarioExist() id: {}", LocalDateTime.now(), id);
+        return repository.existById(id);
     }
 
     private void updateUsuario(Usuario usuarioAtualizado, Usuario usuarioSalvo) {

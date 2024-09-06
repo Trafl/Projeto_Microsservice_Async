@@ -1,4 +1,4 @@
-package com.empiricus.service_email.domain.service;
+package com.empiricus.service_email.domain.service.notification;
 
 import com.empiricus.service_email.domain.model.Email;
 

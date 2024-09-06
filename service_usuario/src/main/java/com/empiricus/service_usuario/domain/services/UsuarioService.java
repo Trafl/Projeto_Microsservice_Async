@@ -16,5 +16,5 @@ public interface UsuarioService {
 
     public void deleteUser(Long id);
 
-
+    public boolean usuarioExist(Long id);
 }
