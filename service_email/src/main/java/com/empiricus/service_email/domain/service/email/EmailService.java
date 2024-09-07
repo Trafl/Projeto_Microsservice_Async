@@ -10,7 +10,7 @@ public interface EmailService {
 
     Page<Email> getAllEmailsOfUsuario(Long usuarioId, Pageable pageable);
 
-    public List<String> getAllEmailsAdmins(List<Long> usuario_ids);
+    public List<String> getAllEmailsAdmins();
 
     Email createEmail(Email email);
 

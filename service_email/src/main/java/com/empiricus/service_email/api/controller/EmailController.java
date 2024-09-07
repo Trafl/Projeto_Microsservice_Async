@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Log4j2
 @RestController
@@ -43,6 +44,14 @@ public class EmailController {
         var pagedModel = pagedResourcesAssembler.toModel(pageEmailsDto);
 
         return ResponseEntity.ok(pagedModel);
+    }
+
+    @GetMapping("/admins")
+    public ResponseEntity<List<String>> getEmailsOfAdmins( HttpServletRequest request){
+        log.info("[{}] - [EmailController] IP: {}, Request: GET, EndPoint: '/api/email/admins'", LocalDateTime.now(), request.getRemoteAddr());
+        var emails = emailService.getAllEmailsAdmins();
+
+        return ResponseEntity.ok(emails);
     }
 
     @PostMapping()

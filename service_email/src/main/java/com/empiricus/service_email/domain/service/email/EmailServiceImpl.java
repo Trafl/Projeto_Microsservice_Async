@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -41,26 +42,23 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public List<String> getAllEmailsAdmins(List<Long> usuarios_ids) {
-        List<String> listOfEmails = new ArrayList<>();
-
-        for(Long usuario_id: usuarios_ids){
-            var result = repository.getEmailAdmin(usuario_id);
-            listOfEmails.add(result);
-        };
-
-        return listOfEmails;
+    public List<String> getAllEmailsAdmins() {
+        log.info("[{}] - [EmailServiceImpl] - executando getAllEmailsAdmins()", LocalDateTime.now());
+        return repository.getEmailAdmin();
     }
 
     @Override
     @Transactional
     public Email createEmail(Email email) {
 
-        if(!usuarioFeignService.usuarioExist(email.getUsuario_id())){
-          throw new UsuarioOrEmailNotFound(
-                    String.format("Não foi encontrado nenhum usuario com o id: %d",email.getUsuario_id()));
+        var usuario =usuarioFeignService.getUsuario(email.getUsuario_id());
+
+        if(usuario.getStatusCode() == HttpStatusCode.valueOf(404)){
+            throw new UsuarioOrEmailNotFound(
+                  String.format("Não foi encontrado nenhum usuario com o id: %d",email.getUsuario_id()));
         }
 
+        email.setEh_admin(usuario.getBody().getEh_admin());
         log.info("[{}] - [EmailServiceImpl] - executando createEmail(), usuario de id: {}", LocalDateTime.now(), email.getUsuario_id());
         var saveEmail = repository.save(email);
         log.info("[{}] - [EmailServiceImpl] - Email salvo com sucesso para usuario de id: {}", LocalDateTime.now(), email.getUsuario_id());

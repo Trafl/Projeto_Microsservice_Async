@@ -20,6 +20,8 @@ public class Email {
 
     private Long usuario_id;
 
+    private Boolean eh_admin;
+
     private String email;
 
     private LocalDate data_criacao = LocalDate.now();
