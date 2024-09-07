@@ -47,7 +47,7 @@ public class UsuarioController {
 
     @GetMapping("/admins")
     ResponseEntity<List<UsuarioDTOOutput>> getAdmins(HttpServletRequest request){
-        log.info("[{}] - [UsuarioController] IP: {}, Request: GET, EndPoint: '/api/usuario'", LocalDateTime.now(), request.getRemoteAddr());
+        log.info("[{}] - [UsuarioController] IP: {}, Request: GET, EndPoint: '/api/usuario/admins'", LocalDateTime.now(), request.getRemoteAddr());
         var pageUsuario = service.getAdmins();
         var listUsuarioDTO = mapper.toListDto(pageUsuario);
 
@@ -74,7 +74,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{usuarioId}")
-    ResponseEntity<UsuarioDTOOutput> updateUser(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioUpdateDTOInput input, HttpServletRequest request){
+    ResponseEntity<UsuarioDTOOutput> updateUser(@PathVariable Long usuarioId, @RequestBody UsuarioUpdateDTOInput input, HttpServletRequest request){
         log.info("[{}] - [UsuarioController] IP: {}, Request: PUT, EndPoint: '/api/usuario/{}'", LocalDateTime.now(), request.getRemoteAddr(), usuarioId);
         var usuarioInput = mapper.toModelUpdate(input);
         var usuario = service.updateUser(usuarioInput, usuarioId);
@@ -98,4 +98,6 @@ public class UsuarioController {
 
         return ResponseEntity.ok(exist);
     }
+
+    @GetMapping()
 }

@@ -11,7 +11,7 @@ spring:
 #      import: file:.env[.properties]
 
 server:
-  port: 0
+  port: 8085
 
   eureka:
     client:
@@ -20,18 +20,3 @@ server:
       register-with-eureka: true
       fetch-registry: true
 
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ivopivoteste@gmail.com
-    password: sktevgkzftrooylq
-
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-          connectiontimeout: 5000
-          timeout: 3000
-          writetimeout: 5000

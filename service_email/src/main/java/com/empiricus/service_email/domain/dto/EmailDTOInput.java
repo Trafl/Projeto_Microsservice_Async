@@ -1,4 +1,4 @@
-package com.empiricus.service_usuario.domain.dto;
+package com.empiricus.service_email.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -6,15 +6,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
+import java.time.LocalDate;
+
 @Getter
+@Setter
 @NoArgsConstructor
-public class UsuarioUpdateDTOInput {
+public class EmailDTOInput {
 
-    private String nome;
+    @NotNull
+    private Long usuario_id;
 
-    private String cpf;
-
-    private String password;
+    @NotBlank
+    private String email;
 
 }

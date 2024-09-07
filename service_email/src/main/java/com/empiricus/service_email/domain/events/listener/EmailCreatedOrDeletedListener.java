@@ -23,7 +23,7 @@ public class EmailCreatedOrDeletedListener {
     @EventListener
     public void eventNotificationCreated(EmailCreated event){
         log.info("[{}] - [EmailCreatedOrDeletedListener] - disparando evento EmailCreated", LocalDateTime.now());
-        kafkaTemplate.send("email-created", event.getEmail());
+        kafkaTemplate.send("email-created",event.getEmail().getEmail(), event.getEmail());
 
     }
 
@@ -31,6 +31,6 @@ public class EmailCreatedOrDeletedListener {
     @EventListener
     public void eventNotificationDeleted(EmailDeleted event){
         log.info("[{}] - [EmailCreatedOrDeletedListener] - disparando evento EmailDeleted", LocalDateTime.now());
-        kafkaTemplate.send("email-deleted", event.getEmail());
+        kafkaTemplate.send("email-deleted",event.getEmail().getEmail(), event.getEmail());
     }
 }

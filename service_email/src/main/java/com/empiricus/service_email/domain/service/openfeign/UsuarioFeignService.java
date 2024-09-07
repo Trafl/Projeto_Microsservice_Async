@@ -11,6 +11,6 @@ import java.util.List;
 public interface UsuarioFeignService {
 
     @GetMapping("/api/usuario/{usuarioId}/exist")
-    Boolean usuarioExist(@PathVariable Long usuarioId);
+    boolean usuarioExist(@PathVariable Long usuarioId);
 
 }

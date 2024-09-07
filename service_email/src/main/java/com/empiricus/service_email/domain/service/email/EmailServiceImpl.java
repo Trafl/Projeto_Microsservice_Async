@@ -43,7 +43,7 @@ public class EmailServiceImpl implements EmailService {
     public Email createEmail(Email email) {
 
         if(!usuarioFeignService.usuarioExist(email.getUsuario_id())){
-            new UsuarioOrEmailNotFound(
+          throw new UsuarioOrEmailNotFound(
                     String.format("Não foi encontrado nenhum usuario com o id: %d",email.getUsuario_id()));
         }
 
@@ -62,7 +62,7 @@ public class EmailServiceImpl implements EmailService {
         log.info("[{}] - [EmailServiceImpl] - Executando deleteEmail(), usuario de id: {}", LocalDateTime.now(), id);
 
         var email= repository.findById(id).orElseThrow(()-> new UsuarioOrEmailNotFound(
-                String.format("Não foi encontrado nenhum email com esse id %d", id)));
+                String.format("Não foi encontrado nenhum email com esse id: %d", id)));
 
         repository.deleteById(id);
 

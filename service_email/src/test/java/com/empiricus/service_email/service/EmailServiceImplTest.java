@@ -1,6 +1,7 @@
 package com.empiricus.service_email.service;
 
 import com.empiricus.service_email.domain.events.event.EmailCreated;
+import com.empiricus.service_email.domain.events.event.EmailDeleted;
 import com.empiricus.service_email.domain.exception.UsuarioOrEmailNotFound;
 import com.empiricus.service_email.domain.model.Email;
 import com.empiricus.service_email.domain.repository.EmailRepository;
@@ -19,6 +20,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -117,5 +119,57 @@ public class EmailServiceImplTest {
             assertNotNull(result.getData_criacao());
 
         }
+
+        @Test
+        void given_nonExistingUsuarioId_When_CreateEmail_ThrowUsuarioOrEmailNotFound(){
+
+            given(usuarioFeignService.usuarioExist(anyLong())).willReturn(false);
+
+
+            var result = assertThrows(UsuarioOrEmailNotFound.class,
+                    ()->{emailService.createEmail(email);
+            });
+
+            assertEquals("Não foi encontrado nenhum usuario com o id: 1", result.getMessage());
+
+            verify(publisher, never()).publishEvent(any(EmailCreated.class));
+            verify(repository, never()).save(any(Email.class));
+
+        }
+    }
+
+    @Nested
+    class deleteEmail {
+
+        @Test
+        void given_UsuarioId_When_deleteEmail(){
+
+            given(repository.findById(anyLong())).willReturn(Optional.of(email));
+
+            emailService.deleteEmail(anyLong());
+
+            verify(repository, times(1)).deleteById(anyLong());
+            verify(publisher, times(1)).publishEvent(any(EmailDeleted.class));
+
+
+        }
+
+        @Test
+        void given_nonExistingUsuarioId_When_DeleteEmail_ThrowUsuarioOrEmailNotFound(){
+
+            given(repository.findById(anyLong())).willReturn(Optional.empty());
+
+
+            var result = assertThrows(UsuarioOrEmailNotFound.class,
+                    ()->{emailService.deleteEmail(1L);
+                    });
+
+            assertEquals("Não foi encontrado nenhum email com esse id: 1", result.getMessage());
+
+            verify(publisher, never()).publishEvent(any(EmailDeleted.class));
+            verify(repository, never()).deleteById(anyLong());
+
+        }
+
     }
 }

@@ -13,9 +13,6 @@ public interface UsuarioFeignService {
     @GetMapping("/api/usuario/{usuarioId}")
     Usuario getOneUsuario(@PathVariable Long usuarioId);
 
-    @GetMapping("/api/usuario/{usuarioId}/exist")
-    Boolean usuarioExist(@PathVariable Long usuarioId);
-
     @GetMapping( "/api/usuario/admins")
     List<String> getAdmins();
 }
