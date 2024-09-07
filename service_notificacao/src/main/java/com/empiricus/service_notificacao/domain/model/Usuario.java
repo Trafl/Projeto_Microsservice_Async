@@ -11,5 +11,5 @@ public class Usuario {
 
     private String nome;
 
-    private Integer cpf;
+    private String cpf;
 }

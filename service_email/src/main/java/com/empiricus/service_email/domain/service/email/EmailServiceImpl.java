@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Log4j2
 @Service
@@ -36,6 +38,18 @@ public class EmailServiceImpl implements EmailService {
                         String.format("Não foi encontrado nenhum usuario de id: %d associado a um ou mais emails",usuarioId)));
 
         return emailsPage;
+    }
+
+    @Override
+    public List<String> getAllEmailsAdmins(List<Long> usuarios_ids) {
+        List<String> listOfEmails = new ArrayList<>();
+
+        for(Long usuario_id: usuarios_ids){
+            var result = repository.getEmailAdmin(usuario_id);
+            listOfEmails.add(result);
+        };
+
+        return listOfEmails;
     }
 
     @Override

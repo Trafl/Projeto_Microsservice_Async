@@ -6,14 +6,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-@FeignClient(name ="service_usuario")
+@FeignClient(name ="service-usuario")
 public interface UsuarioFeignService {
 
     @GetMapping("/api/usuario/{usuarioId}")
-    Usuario getOneUsuario(@PathVariable Long usuarioId);
+    CompletableFuture<Usuario> getOneUsuario(@PathVariable Long usuarioId);
 
-    @GetMapping( "/api/usuario/admins")
-    List<String> getAdmins();
+    @GetMapping("/api/usuario/admins")
+    CompletableFuture<List<String>> getAdmins();
 }
 

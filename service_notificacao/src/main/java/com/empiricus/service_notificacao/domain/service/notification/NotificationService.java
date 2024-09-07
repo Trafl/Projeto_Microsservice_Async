@@ -2,9 +2,11 @@ package com.empiricus.service_notificacao.domain.service.notification;
 
 import com.empiricus.service_notificacao.domain.model.Email;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface NotificationService {
 
-    public void notifyAdminsEmailCreated(Email email);
+    CompletableFuture<Void> notifyAdminsEmailCreated(Email email);
 
-    public void notifyAdminsEmailDeleted(Email email);
+    CompletableFuture<Void> notifyAdminsEmailDeleted(Email email);
 }
