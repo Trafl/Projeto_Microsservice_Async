@@ -46,14 +46,6 @@ public class EmailController {
         return ResponseEntity.ok(pagedModel);
     }
 
-    @GetMapping("/admins")
-    public ResponseEntity<List<String>> getEmailsOfAdmins( HttpServletRequest request){
-        log.info("[{}] - [EmailController] IP: {}, Request: GET, EndPoint: '/api/email/admins'", LocalDateTime.now(), request.getRemoteAddr());
-        var emails = emailService.getAllEmailsAdmins();
-
-        return ResponseEntity.ok(emails);
-    }
-
     @PostMapping()
     ResponseEntity<EmailDTOOutput> createEmail(@RequestBody @Valid EmailDTOInput input, HttpServletRequest request){
 
@@ -73,5 +65,13 @@ public class EmailController {
         emailService.deleteEmail(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/admins")
+    public ResponseEntity<List<String>> getEmailsOfAdmins( HttpServletRequest request){
+        log.info("[{}] - [EmailController] IP: {}, Request: GET, EndPoint: '/api/email/admins'", LocalDateTime.now(), request.getRemoteAddr());
+        var emails = emailService.getAllEmailsAdmins();
+
+        return ResponseEntity.ok(emails);
     }
 }

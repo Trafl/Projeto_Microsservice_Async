@@ -2,25 +2,21 @@ package com.empiricus.service_email.service;
 
 import com.empiricus.service_email.domain.events.event.EmailCreated;
 import com.empiricus.service_email.domain.events.event.EmailDeleted;
-import com.empiricus.service_email.domain.exception.UsuarioOrEmailNotFound;
+import com.empiricus.service_email.domain.exception.EmailNotFoundException;
 import com.empiricus.service_email.domain.model.Email;
 import com.empiricus.service_email.domain.repository.EmailRepository;
 import com.empiricus.service_email.domain.service.email.EmailServiceImpl;
 import com.empiricus.service_email.domain.service.openfeign.UsuarioFeignService;
-import jakarta.validation.constraints.AssertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -88,7 +84,7 @@ public class EmailServiceImplTest {
             Pageable pageable = Pageable.ofSize(10);
             given(repository.getAllEmailsByUsuario_Id(anyLong(),any(Pageable.class))).willReturn(Optional.empty());
 
-            var result = assertThrows(UsuarioOrEmailNotFound.class,
+            var result = assertThrows(EmailNotFoundException.class,
                     ()->{emailService.getAllEmailsOfUsuario(1L,pageable );});
 
             assertEquals("Não foi encontrado nenhum usuario de id: 1 associado a um ou mais emails", result.getMessage());
@@ -126,7 +122,7 @@ public class EmailServiceImplTest {
             given(usuarioFeignService.usuarioExist(anyLong())).willReturn(false);
 
 
-            var result = assertThrows(UsuarioOrEmailNotFound.class,
+            var result = assertThrows(EmailNotFoundException.class,
                     ()->{emailService.createEmail(email);
             });
 
@@ -160,7 +156,7 @@ public class EmailServiceImplTest {
             given(repository.findById(anyLong())).willReturn(Optional.empty());
 
 
-            var result = assertThrows(UsuarioOrEmailNotFound.class,
+            var result = assertThrows(EmailNotFoundException.class,
                     ()->{emailService.deleteEmail(1L);
                     });
 

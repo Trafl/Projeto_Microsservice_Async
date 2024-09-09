@@ -10,9 +10,9 @@ public interface EmailService {
 
     Page<Email> getAllEmailsOfUsuario(Long usuarioId, Pageable pageable);
 
-    public List<String> getAllEmailsAdmins();
-
     Email createEmail(Email email);
 
     void deleteEmail(Long id);
+
+    public List<String> getAllEmailsAdmins();
 }

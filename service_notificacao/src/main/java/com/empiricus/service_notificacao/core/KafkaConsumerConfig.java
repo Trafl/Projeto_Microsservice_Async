@@ -28,8 +28,8 @@ public class KafkaConsumerConfig {
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class.getName());
         config.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class.getName());
-        config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.empiricus.service_email.domain.model.Email");
-        config.put(JsonDeserializer.TRUSTED_PACKAGES, "com.empiricus.service_email.domain.model");
+        config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.empiricus.service_notificacao.domain.model.Email");
+        config.put(JsonDeserializer.TRUSTED_PACKAGES, "com.empiricus.service_notificacao.domain.model");
 
         return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(),
                 new JsonDeserializer<>(Email.class, false));

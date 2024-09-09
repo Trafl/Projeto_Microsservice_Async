@@ -2,7 +2,8 @@ package com.empiricus.service_email.domain.service.email;
 
 import com.empiricus.service_email.domain.events.event.EmailCreated;
 import com.empiricus.service_email.domain.events.event.EmailDeleted;
-import com.empiricus.service_email.domain.exception.UsuarioOrEmailNotFound;
+import com.empiricus.service_email.domain.exception.UsuarioNotFoundException;
+import com.empiricus.service_email.domain.exception.EmailNotFoundException;
 import com.empiricus.service_email.domain.model.Email;
 import com.empiricus.service_email.domain.repository.EmailRepository;
 import com.empiricus.service_email.domain.service.openfeign.UsuarioFeignService;
@@ -16,7 +17,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
@@ -35,16 +35,10 @@ public class EmailServiceImpl implements EmailService {
         log.info("[{}] - [EmailServiceImpl] - executando getAllEmailsOfUsuario(), usuario de id: {}", LocalDateTime.now(), usuarioId);
 
         var emailsPage = repository.getAllEmailsByUsuario_Id(usuarioId, pageable)
-                .orElseThrow(()-> new UsuarioOrEmailNotFound(
+                .orElseThrow(()-> new EmailNotFoundException(
                         String.format("Não foi encontrado nenhum usuario de id: %d associado a um ou mais emails",usuarioId)));
 
         return emailsPage;
-    }
-
-    @Override
-    public List<String> getAllEmailsAdmins() {
-        log.info("[{}] - [EmailServiceImpl] - executando getAllEmailsAdmins()", LocalDateTime.now());
-        return repository.getEmailAdmin();
     }
 
     @Override
@@ -54,7 +48,7 @@ public class EmailServiceImpl implements EmailService {
         var usuario =usuarioFeignService.getUsuario(email.getUsuario_id());
 
         if(usuario.getStatusCode() == HttpStatusCode.valueOf(404)){
-            throw new UsuarioOrEmailNotFound(
+            throw new UsuarioNotFoundException(
                   String.format("Não foi encontrado nenhum usuario com o id: %d",email.getUsuario_id()));
         }
 
@@ -73,7 +67,7 @@ public class EmailServiceImpl implements EmailService {
     public void deleteEmail(Long id) {
         log.info("[{}] - [EmailServiceImpl] - Executando deleteEmail(), usuario de id: {}", LocalDateTime.now(), id);
 
-        var email= repository.findById(id).orElseThrow(()-> new UsuarioOrEmailNotFound(
+        var email= repository.findById(id).orElseThrow(()-> new EmailNotFoundException(
                 String.format("Não foi encontrado nenhum email com esse id: %d", id)));
 
         repository.deleteById(id);
@@ -81,5 +75,11 @@ public class EmailServiceImpl implements EmailService {
         log.info("[{}] - [EmailServiceImpl] - Email deletado com sucesso, usuario de id: {}", LocalDateTime.now(), id);
 
         publisher.publishEvent(new EmailDeleted(email));
+    }
+
+    @Override
+    public List<String> getAllEmailsAdmins() {
+        log.info("[{}] - [EmailServiceImpl] - executando getAllEmailsAdmins()", LocalDateTime.now());
+        return repository.getEmailAdmin();
     }
 }

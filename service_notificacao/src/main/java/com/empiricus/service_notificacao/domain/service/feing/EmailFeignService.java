@@ -10,6 +10,6 @@ import java.util.concurrent.CompletableFuture;
 public interface EmailFeignService {
 
     @GetMapping("/api/email/admins")
-    CompletableFuture<List<String>> getAdmins();
+    List<String> getAdmins();
 }
 

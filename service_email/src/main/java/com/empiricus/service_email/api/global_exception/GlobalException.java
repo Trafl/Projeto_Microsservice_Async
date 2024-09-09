@@ -1,6 +1,7 @@
 package com.empiricus.service_email.api.global_exception;
 
-import com.empiricus.service_email.domain.exception.UsuarioOrEmailNotFound;
+import com.empiricus.service_email.domain.exception.EmailNotFoundException;
+import com.empiricus.service_email.domain.exception.UsuarioNotFoundException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.*;
@@ -54,14 +55,26 @@ public class GlobalException extends ResponseEntityExceptionHandler {
         return errors;
     }
 
-    @ExceptionHandler(UsuarioOrEmailNotFound.class)
-    ProblemDetail handlerUsuarioNotFoundException(UsuarioOrEmailNotFound e) {
+    @ExceptionHandler(EmailNotFoundException.class)
+    ProblemDetail handlerEmailNotFoundException(EmailNotFoundException e) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
 
-        problem.setTitle("Usuario ou Email não registrado");
+        problem.setTitle("Email não registrado");
         problem.setProperty("timestamp", Instant.now());
 
-        log.error("[{}] - [GlobalExeption] - UsuarioOrEmailNotFound: {}", LocalDateTime.now(), e.getMessage());
+        log.error("[{}] - [GlobalExeption] - EmailNotFoundException: {}", LocalDateTime.now(), e.getMessage());
+        return problem;
+
+    }
+
+    @ExceptionHandler(UsuarioNotFoundException.class)
+    ProblemDetail handlerUsuarioNotFoundException(EmailNotFoundException e) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
+
+        problem.setTitle("Usuario não registrado");
+        problem.setProperty("timestamp", Instant.now());
+
+        log.error("[{}] - [GlobalExeption] - UsuarioNotFoundException: {}", LocalDateTime.now(), e.getMessage());
         return problem;
 
     }

@@ -19,7 +19,6 @@ public class EmailCreatedOrDeletedListener {
 
     private final KafkaTemplate<String, Email> kafkaTemplate;
 
-    @Async
     @EventListener
     public void eventNotificationCreated(EmailCreated event){
         log.info("[{}] - [EmailCreatedOrDeletedListener] - disparando evento EmailCreated", LocalDateTime.now());
@@ -27,7 +26,6 @@ public class EmailCreatedOrDeletedListener {
 
     }
 
-    @Async
     @EventListener
     public void eventNotificationDeleted(EmailDeleted event){
         log.info("[{}] - [EmailCreatedOrDeletedListener] - disparando evento EmailDeleted", LocalDateTime.now());

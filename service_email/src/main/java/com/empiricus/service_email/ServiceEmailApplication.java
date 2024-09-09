@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @EnableDiscoveryClient
 @EnableFeignClients
-@EnableAsync
 @SpringBootApplication
 public class ServiceEmailApplication {
 

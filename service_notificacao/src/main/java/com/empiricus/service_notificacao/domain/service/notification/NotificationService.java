@@ -3,10 +3,11 @@ package com.empiricus.service_notificacao.domain.service.notification;
 import com.empiricus.service_notificacao.domain.model.Email;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public interface NotificationService {
 
-    CompletableFuture<Void> notifyAdminsEmailCreated(Email email);
+    void notifyAdminsEmailCreated(Email email) throws ExecutionException, InterruptedException;
 
-    CompletableFuture<Void> notifyAdminsEmailDeleted(Email email);
+    void notifyAdminsEmailDeleted(Email email) throws ExecutionException, InterruptedException;
 }
