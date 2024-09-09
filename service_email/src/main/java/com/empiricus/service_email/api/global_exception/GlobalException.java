@@ -1,6 +1,8 @@
 package com.empiricus.service_email.api.global_exception;
 
 import com.empiricus.service_email.domain.exception.EmailNotFoundException;
+import com.empiricus.service_email.domain.exception.UsuarioBadRequestException;
+import com.empiricus.service_email.domain.exception.UsuarioInteralServerErrorException;
 import com.empiricus.service_email.domain.exception.UsuarioNotFoundException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Configuration;
@@ -68,7 +70,7 @@ public class GlobalException extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UsuarioNotFoundException.class)
-    ProblemDetail handlerUsuarioNotFoundException(EmailNotFoundException e) {
+    ProblemDetail handlerUsuarioNotFoundException(UsuarioNotFoundException e) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
 
         problem.setTitle("Usuario não registrado");
@@ -78,4 +80,29 @@ public class GlobalException extends ResponseEntityExceptionHandler {
         return problem;
 
     }
+
+    @ExceptionHandler(UsuarioBadRequestException.class)
+    ProblemDetail handlerUsuarioBadRequestException(UsuarioBadRequestException e) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+
+        problem.setTitle("Chamada incorreta ao serviço de usuario");
+        problem.setProperty("timestamp", Instant.now());
+
+        log.error("[{}] - [GlobalExeption] - UsuarioBadRequestException: {}", LocalDateTime.now(), e.getMessage());
+        return problem;
+
+    }
+
+    @ExceptionHandler(UsuarioInteralServerErrorException.class)
+    ProblemDetail handlerUsuarioInteralServerErrorException(UsuarioInteralServerErrorException e) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+
+        problem.setTitle("Error interno no serviço de Usuario");
+        problem.setProperty("timestamp", Instant.now());
+
+        log.error("[{}] - [GlobalExeption] - UsuarioInteralServerErrorException: {}", LocalDateTime.now(), e.getMessage());
+        return problem;
+
+    }
+
 }

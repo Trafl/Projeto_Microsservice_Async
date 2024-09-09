@@ -47,12 +47,7 @@ public class EmailServiceImpl implements EmailService {
 
         var usuario =usuarioFeignService.getUsuario(email.getUsuario_id());
 
-        if(usuario.getStatusCode() == HttpStatusCode.valueOf(404)){
-            throw new UsuarioNotFoundException(
-                  String.format("Não foi encontrado nenhum usuario com o id: %d",email.getUsuario_id()));
-        }
-
-        email.setEh_admin(usuario.getBody().getEh_admin());
+        email.setEh_admin(usuario.getEh_admin());
         log.info("[{}] - [EmailServiceImpl] - executando createEmail(), usuario de id: {}", LocalDateTime.now(), email.getUsuario_id());
         var saveEmail = repository.save(email);
         log.info("[{}] - [EmailServiceImpl] - Email salvo com sucesso para usuario de id: {}", LocalDateTime.now(), email.getUsuario_id());
