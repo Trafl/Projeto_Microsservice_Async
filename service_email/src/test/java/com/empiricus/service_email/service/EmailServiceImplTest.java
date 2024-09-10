@@ -3,7 +3,9 @@ package com.empiricus.service_email.service;
 import com.empiricus.service_email.domain.events.event.EmailCreated;
 import com.empiricus.service_email.domain.events.event.EmailDeleted;
 import com.empiricus.service_email.domain.exception.EmailNotFoundException;
+import com.empiricus.service_email.domain.exception.UsuarioNotFoundException;
 import com.empiricus.service_email.domain.model.Email;
+import com.empiricus.service_email.domain.model.Usuario;
 import com.empiricus.service_email.domain.repository.EmailRepository;
 import com.empiricus.service_email.domain.service.email.EmailServiceImpl;
 import com.empiricus.service_email.domain.service.openfeign.UsuarioFeignService;
@@ -66,7 +68,8 @@ public class EmailServiceImplTest {
 
             Page<Email> pageOfEmails = new PageImpl<>(listOfEmails,pageable,listOfEmails.size());
 
-            given(repository.getAllEmailsByUsuario_Id(anyLong(), any(Pageable.class))).willReturn(Optional.of(pageOfEmails));
+            given(repository.existEmailOfUsuario_id(anyLong())).willReturn(true);
+            given(repository.getAllEmailsByUsuario_Id(anyLong(), any(Pageable.class))).willReturn(pageOfEmails);
 
             var result = emailService.getAllEmailsOfUsuario(1L, pageable);
 
@@ -82,12 +85,12 @@ public class EmailServiceImplTest {
         @Test
         void given_NonExistentUsuarioId_Throw_UsuarioOrEmailNotFound(){
             Pageable pageable = Pageable.ofSize(10);
-            given(repository.getAllEmailsByUsuario_Id(anyLong(),any(Pageable.class))).willReturn(Optional.empty());
+            given(repository.existEmailOfUsuario_id(anyLong())).willReturn(false);
 
             var result = assertThrows(EmailNotFoundException.class,
                     ()->{emailService.getAllEmailsOfUsuario(1L,pageable );});
 
-            assertEquals("Não foi encontrado nenhum usuario de id: 1 associado a um ou mais emails", result.getMessage());
+            assertEquals("Não foi encontrado nenhum Email associado a um usuario de id: 1", result.getMessage());
         }
     }
 
@@ -96,12 +99,17 @@ public class EmailServiceImplTest {
 
         @Test
         void given_EmailBody_When_createEmail_ReturnEmail(){
+            var usuario = new Usuario();
+            usuario.setEh_admin(true);
+
             var newEmail = new Email();
             newEmail.setId(1L);
             newEmail.setUsuario_id(email.getUsuario_id());
             newEmail.setEmail(email.getEmail());
+            newEmail.setEh_admin(usuario.getEh_admin());
 
-            given(usuarioFeignService.usuarioExist(anyLong())).willReturn(true);
+            given(usuarioFeignService.getUsuario(anyLong())).willReturn(usuario);
+
             given(repository.save(any(Email.class))).willReturn(newEmail);
 
             var result = emailService.createEmail(email);
@@ -112,6 +120,7 @@ public class EmailServiceImplTest {
             assertTrue(result.getId() != null && result.getId() > 0);
             assertEquals(email.getEmail(),result.getEmail());
             assertEquals(email.getUsuario_id(),result.getUsuario_id());
+            assertEquals(usuario.getEh_admin(), result.getEh_admin());
             assertNotNull(result.getData_criacao());
 
         }
@@ -119,18 +128,14 @@ public class EmailServiceImplTest {
         @Test
         void given_nonExistingUsuarioId_When_CreateEmail_ThrowUsuarioOrEmailNotFound(){
 
-            given(usuarioFeignService.usuarioExist(anyLong())).willReturn(false);
+            given(usuarioFeignService.getUsuario(anyLong())).willThrow(UsuarioNotFoundException.class);
 
-
-            var result = assertThrows(EmailNotFoundException.class,
+            assertThrows(UsuarioNotFoundException.class,
                     ()->{emailService.createEmail(email);
             });
 
-            assertEquals("Não foi encontrado nenhum usuario com o id: 1", result.getMessage());
-
             verify(publisher, never()).publishEvent(any(EmailCreated.class));
             verify(repository, never()).save(any(Email.class));
-
         }
     }
 
@@ -167,5 +172,22 @@ public class EmailServiceImplTest {
 
         }
 
+    }
+
+    @Nested
+    class getAllEmailsAdmins {
+
+        @Test
+        public void when_GetAllEmailsAdmins_Return_ListOfStrings() {
+
+            List<String> expectedEmails = List.of("admin1@example.com", "admin2@example.com");
+
+            given(repository.getEmailAdmin()).willReturn(expectedEmails);
+
+            var actualEmails = emailService.getAllEmailsAdmins();
+
+            assertTrue(actualEmails instanceof List<String>);
+            assertEquals(expectedEmails, actualEmails);
+        }
     }
 }

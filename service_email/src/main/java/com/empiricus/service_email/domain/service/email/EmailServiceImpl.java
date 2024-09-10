@@ -34,22 +34,26 @@ public class EmailServiceImpl implements EmailService {
     public Page<Email> getAllEmailsOfUsuario(Long usuarioId, Pageable pageable) {
         log.info("[{}] - [EmailServiceImpl] - executando getAllEmailsOfUsuario(), usuario de id: {}", LocalDateTime.now(), usuarioId);
 
-        var emailsPage = repository.getAllEmailsByUsuario_Id(usuarioId, pageable)
-                .orElseThrow(()-> new EmailNotFoundException(
-                        String.format("Não foi encontrado nenhum usuario de id: %d associado a um ou mais emails",usuarioId)));
+        if(!repository.existEmailOfUsuario_id(usuarioId)){
+            throw new EmailNotFoundException(
+                    String.format("Não foi encontrado nenhum Email associado a um usuario de id: %d",usuarioId));
+         }
 
-        return emailsPage;
+        return repository.getAllEmailsByUsuario_Id(usuarioId, pageable);
     }
 
     @Override
     @Transactional
     public Email createEmail(Email email) {
 
+        log.info("[{}] - [EmailServiceImpl] - executando createEmail(), usuario de id: {}", LocalDateTime.now(), email.getUsuario_id());
+
         var usuario =usuarioFeignService.getUsuario(email.getUsuario_id());
 
         email.setEh_admin(usuario.getEh_admin());
-        log.info("[{}] - [EmailServiceImpl] - executando createEmail(), usuario de id: {}", LocalDateTime.now(), email.getUsuario_id());
+
         var saveEmail = repository.save(email);
+
         log.info("[{}] - [EmailServiceImpl] - Email salvo com sucesso para usuario de id: {}", LocalDateTime.now(), email.getUsuario_id());
 
         publisher.publishEvent(new EmailCreated(saveEmail));
@@ -62,8 +66,10 @@ public class EmailServiceImpl implements EmailService {
     public void deleteEmail(Long id) {
         log.info("[{}] - [EmailServiceImpl] - Executando deleteEmail(), usuario de id: {}", LocalDateTime.now(), id);
 
-        var email= repository.findById(id).orElseThrow(()-> new EmailNotFoundException(
-                String.format("Não foi encontrado nenhum email com esse id: %d", id)));
+        var email= repository.findById(id).orElseThrow(
+                ()-> new EmailNotFoundException(
+                String.format("Não foi encontrado nenhum email com esse id: %d", id))
+        );
 
         repository.deleteById(id);
 

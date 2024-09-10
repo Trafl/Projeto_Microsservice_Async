@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutionException;
 
 public interface NotificationService {
 
-    void notifyAdminsEmailCreated(Email email) throws ExecutionException, InterruptedException;
+    void notifyAdminsEmailCreated(Email email);
 
-    void notifyAdminsEmailDeleted(Email email) throws ExecutionException, InterruptedException;
+    void notifyAdminsEmailDeleted(Email email);
 }

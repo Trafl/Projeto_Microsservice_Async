@@ -1,4 +1,4 @@
-package com.empiricus.service_notificacao.core;
+package com.empiricus.service_notificacao.core.kafka;
 
 import com.empiricus.service_notificacao.domain.model.Email;
 import org.apache.kafka.clients.consumer.ConsumerConfig;

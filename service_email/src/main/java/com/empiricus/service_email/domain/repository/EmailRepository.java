@@ -13,8 +13,11 @@ import java.util.Optional;
 public interface EmailRepository extends JpaRepository<Email, Long> {
 
     @Query("SELECT e FROM Email e WHERE e.usuario_id = :usuario_id")
-    Optional<Page<Email>> getAllEmailsByUsuario_Id(@Param("usuario_id") Long usuario_id, Pageable pageable);
+    Page<Email> getAllEmailsByUsuario_Id(@Param("usuario_id") Long usuario_id, Pageable pageable);
 
     @Query("SELECT e.email FROM Email e WHERE e.eh_admin = true")
     List<String> getEmailAdmin();
+
+    @Query("SELECT COUNT(e) > 0 FROM Email e WHERE e.usuario_id = :usuario_id")
+    Boolean existEmailOfUsuario_id(@Param("usuario_id") Long usuario_id);
 }
