@@ -68,7 +68,7 @@ public class EmailServiceImpl implements EmailService {
 
         var email= repository.findById(id).orElseThrow(
                 ()-> new EmailNotFoundException(
-                String.format("Não foi encontrado nenhum email com esse id: %d", id))
+                String.format("Não foi encontrado nenhum email com id: %d", id))
         );
 
         repository.deleteById(id);
