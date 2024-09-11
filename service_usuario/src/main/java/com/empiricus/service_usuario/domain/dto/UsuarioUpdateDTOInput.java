@@ -15,6 +15,5 @@ public class UsuarioUpdateDTOInput {
 
     private String cpf;
 
-    private String password;
 
 }

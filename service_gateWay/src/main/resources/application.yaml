@@ -9,16 +9,14 @@ spring:
           enabled: true
           lower-case-service-id: true
 
-      routes:
-        - id: service-usuario
-          uri: lb://service-usuario
-          predicates:
-            - Path=/api/usuario/**
 
-        - id: service-email
-          uri: lb://service-email
-          predicates:
-            - Path=/api/email/**
+
+  main:
+    allow-bean-definition-overriding: true
+
+jwt:
+  secret: "UmaSenhaAi"
+  expiration-ms: 86400000
 
 server:
   port: 8080
@@ -27,3 +25,10 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000

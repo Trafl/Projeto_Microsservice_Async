@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,6 +22,8 @@ import java.util.List;
 public class UsuarioServiceImpl implements UsuarioService{
 
     private final UsuarioRepository repository;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Page<Usuario> getAll(Pageable pageable) {
@@ -42,6 +45,7 @@ public class UsuarioServiceImpl implements UsuarioService{
     @Override
     public Usuario addUser(Usuario usuario) {
         log.info("[{}] - [UsuarioServiceImpl] - executando addUser()", LocalDateTime.now());
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         var novoUsuario = repository.save(usuario);
         log.info("[{}] - [UsuarioServiceImpl] - Usuario adicionado com sucesso id: {}", LocalDateTime.now(), novoUsuario.getId());
         return novoUsuario;
@@ -87,9 +91,6 @@ public class UsuarioServiceImpl implements UsuarioService{
         }
         if(usuarioAtualizado.getCpf() != null && !usuarioAtualizado.getCpf().isBlank()){
             usuarioSalvo.setCpf(usuarioAtualizado.getCpf());
-        }
-        if(usuarioAtualizado.getPassword() != null && !usuarioAtualizado.getPassword().isBlank()){
-            usuarioSalvo.setPassword(usuarioAtualizado.getPassword());
         }
     }
 }

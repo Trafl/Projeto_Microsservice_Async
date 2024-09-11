@@ -49,8 +49,6 @@ public class UsuarioController {
     ResponseEntity<List<UsuarioDTOOutput>> getAdmins(HttpServletRequest request){
         log.info("[{}] - [UsuarioController] IP: {}, Request: GET, EndPoint: '/api/usuario/admins'", LocalDateTime.now(), request.getRemoteAddr());
 
-        //Enviar uma List de Id's de usuario ADM
-
         var pageUsuario = service.getAdmins();
         var listUsuarioDTO = mapper.toListDto(pageUsuario);
 
