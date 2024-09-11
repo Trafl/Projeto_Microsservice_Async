@@ -6,11 +6,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
+
+import java.util.Collections;
 
 @Log4j2
 @Component
@@ -38,7 +42,11 @@ public class JwtAuthorizationFilter implements WebFilter {
                 log.info("Claims: " + claims.toString());
                 log.info("Campo 'admin' extraído: " + isAdmin);
 
-                if (Boolean.TRUE.equals(isAdmin)) {
+                if (isAdmin) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            claims.getSubject(), null, Collections.emptyList()
+                    );
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
                     log.info("Usuário é administrador, permitindo acesso.");
                     return chain.filter(exchange);
                 } else {
