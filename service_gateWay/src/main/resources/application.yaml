@@ -25,7 +25,7 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:${EUREKA_SERVER_PORT}/eureka/
+      defaultZone: ${EUREKA_HOST}
 
 feign:
   client:
