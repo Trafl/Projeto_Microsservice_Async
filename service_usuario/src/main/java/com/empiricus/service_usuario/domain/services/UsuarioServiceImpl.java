@@ -43,7 +43,7 @@ public class UsuarioServiceImpl implements UsuarioService{
     }
 
     @Override
-    public Usuario addUser(Usuario usuario) {
+    public Usuario addUsuario(Usuario usuario) {
         log.info("[{}] - [UsuarioServiceImpl] - executando addUser()", LocalDateTime.now());
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         var novoUsuario = repository.save(usuario);
@@ -53,7 +53,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     @Override
     @Transactional
-    public Usuario updateUser(Usuario usuarioAtualizado, Long id) {
+    public Usuario updateUsuario(Usuario usuarioAtualizado, Long id) {
         log.info("[{}] - [UsuarioServiceImpl] - executando updateUser() id: {}", LocalDateTime.now(), id);
         var usuarioSalvo = getOne(id);
 
@@ -66,7 +66,7 @@ public class UsuarioServiceImpl implements UsuarioService{
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUsuario(Long id) {
         log.info("[{}] - [UsuarioServiceImpl] - executando deleteUser() id: {}", LocalDateTime.now(), id);
         getOne(id);
         repository.deleteById(id);
@@ -79,6 +79,7 @@ public class UsuarioServiceImpl implements UsuarioService{
         return repository.existsById(id);
     }
 
+    @Override
     public List<Usuario> getAdmins(){
         log.info("[{}] - [UsuarioServiceImpl] - executando findAdmins()", LocalDateTime.now());
         return repository.findAdmins();
@@ -91,6 +92,9 @@ public class UsuarioServiceImpl implements UsuarioService{
         }
         if(usuarioAtualizado.getCpf() != null && !usuarioAtualizado.getCpf().isBlank()){
             usuarioSalvo.setCpf(usuarioAtualizado.getCpf());
+        }
+        if(usuarioAtualizado.getPassword() != null && !usuarioAtualizado.getPassword().isBlank()){
+            usuarioSalvo.setPassword(passwordEncoder.encode(usuarioAtualizado.getPassword()));
         }
     }
 }

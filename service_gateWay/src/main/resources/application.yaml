@@ -2,6 +2,9 @@ spring:
   application:
     name: service-gateWay
 
+  config:
+    import: file:.env[.properties]
+
   cloud:
     gateway:
       discovery:
@@ -9,22 +12,20 @@ spring:
           enabled: true
           lower-case-service-id: true
 
-
-
   main:
     allow-bean-definition-overriding: true
 
 jwt:
-  secret: "UmaSenhaAi"
+  secret: ${JWT_SECRET}
   expiration-ms: 86400000
 
 server:
-  port: 8080
+  port: ${GATEWAY_PORT}
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://localhost:${EUREKA_SERVER_PORT}/eureka/
 
 feign:
   client:

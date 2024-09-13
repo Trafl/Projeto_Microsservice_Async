@@ -125,7 +125,7 @@ public class UsuarioServiceImplTest {
 
             given(repository.save(any(Usuario.class))).willReturn(novoUsuario);
 
-            var result = service.addUser(usuario);
+            var result = service.addUsuario(usuario);
 
             assertTrue(result.getId() != null && result.getId() > 0);
 
@@ -156,7 +156,7 @@ public class UsuarioServiceImplTest {
 
             given(repository.findById(anyLong())).willReturn(Optional.of(usuario));
 
-            var result = service.updateUser(usuarioAtualizado, 1L);
+            var result = service.updateUsuario(usuarioAtualizado, 1L);
 
             assertNotNull(result);
             assertEquals(usuarioAtualizado.getNome(), result.getNome());
@@ -176,7 +176,7 @@ public class UsuarioServiceImplTest {
 
             given(repository.findById(anyLong())).willReturn(Optional.of(usuario));
 
-            var result = service.updateUser(usuarioAtualizado, 1L);
+            var result = service.updateUsuario(usuarioAtualizado, 1L);
 
             assertNotNull(result);
             assertEquals(usuario.getNome(), result.getNome());
@@ -195,7 +195,7 @@ public class UsuarioServiceImplTest {
             given(repository.findById(anyLong())).willReturn(Optional.empty());
 
             var result = assertThrows(UsuarioNotFoundException.class,
-                    () -> {service.updateUser(usuario1,1L);
+                    () -> {service.updateUsuario(usuario1,1L);
                     });
 
             assertEquals("Usuario de id 1 não foi encontrado no banco de dados", result.getMessage());
@@ -210,7 +210,7 @@ public class UsuarioServiceImplTest {
         void given_UsuarioId_When_deleteUser_ReturnVoid(){
             given(repository.findById(anyLong())).willReturn(Optional.of(usuario));
 
-            service.deleteUser(anyLong());
+            service.deleteUsuario(anyLong());
 
             verify(repository, times(1)).deleteById(anyLong());
         }
@@ -220,7 +220,7 @@ public class UsuarioServiceImplTest {
             given(repository.findById(1L)).willReturn(Optional.empty());
 
             var result = assertThrows(UsuarioNotFoundException.class,
-                    ()-> {service.deleteUser(1L);
+                    ()-> {service.deleteUsuario(1L);
             });
 
             verify(repository, never()).deleteById(1L);

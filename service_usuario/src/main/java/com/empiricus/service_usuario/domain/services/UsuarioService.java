@@ -12,11 +12,11 @@ public interface UsuarioService {
 
     public Usuario getOne(Long id);
 
-    public Usuario addUser(Usuario usuario);
+    public Usuario addUsuario(Usuario usuario);
 
-    public Usuario updateUser(Usuario usuario, Long id);
+    public Usuario updateUsuario(Usuario usuario, Long id);
 
-    public void deleteUser(Long id);
+    public void deleteUsuario(Long id);
 
     public boolean usuarioExist(Long id);
 

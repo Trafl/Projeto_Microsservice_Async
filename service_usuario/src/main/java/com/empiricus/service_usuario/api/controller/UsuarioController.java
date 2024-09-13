@@ -1,6 +1,6 @@
 package com.empiricus.service_usuario.api.controller;
 
-import com.empiricus.service_usuario.api.usuario_mapper.UsuarioMapper;
+import com.empiricus.service_usuario.api.mapper.UsuarioMapper;
 import com.empiricus.service_usuario.domain.dto.UsuarioDTOInput;
 import com.empiricus.service_usuario.domain.dto.UsuarioDTOOutput;
 import com.empiricus.service_usuario.domain.dto.UsuarioUpdateDTOInput;
@@ -68,7 +68,7 @@ public class UsuarioController {
     ResponseEntity<UsuarioDTOOutput> addUser(@RequestBody @Valid UsuarioDTOInput input, HttpServletRequest request){
         log.info("[{}] - [UsuarioController] IP: {}, Request: POST, EndPoint: '/api/usuario'", LocalDateTime.now(), request.getRemoteAddr());
         var usuarioInput = mapper.toModel(input);
-        var usuario = service.addUser(usuarioInput);
+        var usuario = service.addUsuario(usuarioInput);
         var usuarioDto = mapper.toDTO(usuario);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDto);
@@ -78,7 +78,7 @@ public class UsuarioController {
     ResponseEntity<UsuarioDTOOutput> updateUser(@PathVariable Long usuarioId, @RequestBody UsuarioUpdateDTOInput input, HttpServletRequest request){
         log.info("[{}] - [UsuarioController] IP: {}, Request: PUT, EndPoint: '/api/usuario/{}'", LocalDateTime.now(), request.getRemoteAddr(), usuarioId);
         var usuarioInput = mapper.toModelUpdate(input);
-        var usuario = service.updateUser(usuarioInput, usuarioId);
+        var usuario = service.updateUsuario(usuarioInput, usuarioId);
         var usuarioDto = mapper.toDTO(usuario);
 
         return ResponseEntity.ok(usuarioDto);
@@ -87,7 +87,7 @@ public class UsuarioController {
     @DeleteMapping("/{usuarioId}")
     ResponseEntity<Void> deleteUser(@PathVariable Long usuarioId, HttpServletRequest request){
         log.info("[{}] - [UsuarioController] IP: {}, Request: DELETE, EndPoint: '/api/usuario/{}'", LocalDateTime.now(), request.getRemoteAddr(), usuarioId);
-        service.deleteUser(usuarioId);
+        service.deleteUsuario(usuarioId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

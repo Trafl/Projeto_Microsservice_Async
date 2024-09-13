@@ -2,21 +2,24 @@ spring:
   application:
     name: service-notificacao
 
+  config:
+    import: file:.env[.properties]
+
   server:
-    port: 8088
+    port: 0
 
   eureka:
     client:
       service-url:
-        defaultZone: http://localhost:8761/eureka
+        defaultZone: ${EUREKA_HOST}
       register-with-eureka: true
       fetch-registry: true
 
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ivopivoteste@gmail.com
-    password: sktevgkzftrooylq
+    host: ${EMAIL_HOST}
+    port: ${EMAIL_PORT}
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
 
     properties:
       mail:

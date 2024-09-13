@@ -1,4 +1,4 @@
-package com.empiricus.service_usuario.api.usuario_mapper;
+package com.empiricus.service_usuario.api.mapper;
 
 
 import com.empiricus.service_usuario.domain.dto.UsuarioDTOInput;

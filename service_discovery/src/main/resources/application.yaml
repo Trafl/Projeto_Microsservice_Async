@@ -2,15 +2,18 @@ spring:
   application:
       name: service-discovery
 
+  config:
+    import: file:.env[.properties]
+
 server:
-  port: 8761
+  port: ${EUREKA_SERVER_PORT}
 
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: ${EUREKA_HOST}
 
   instance:
     lease-renewal-interval-in-seconds: 30
