@@ -1,5 +1,6 @@
 package com.empiricus.service_usuario.domain.services;
 
+import com.empiricus.service_usuario.domain.exception.UsuarioExistException;
 import com.empiricus.service_usuario.domain.exception.UsuarioNotFoundException;
 import com.empiricus.service_usuario.domain.model.Usuario;
 import com.empiricus.service_usuario.domain.repository.UsuarioRepository;
@@ -44,6 +45,11 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     @Override
     public Usuario addUsuario(Usuario usuario) {
+        if(repository.existsByNome(usuario.getNome())){
+            throw new UsuarioExistException(String
+                    .format("Usuario com o nome %s já existe", usuario.getNome()));
+        }
+
         log.info("[{}] - [UsuarioServiceImpl] - executando addUser()", LocalDateTime.now());
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         var novoUsuario = repository.save(usuario);
@@ -54,6 +60,13 @@ public class UsuarioServiceImpl implements UsuarioService{
     @Override
     @Transactional
     public Usuario updateUsuario(Usuario usuarioAtualizado, Long id) {
+        log.info("[{}] - [UsuarioServiceImpl] - executando updateUser() id: {}", LocalDateTime.now(), id);
+
+        if(repository.existsByNome(usuarioAtualizado.getNome())){
+            throw new UsuarioExistException(String
+                    .format("Usuario com o nome %s já existe", usuarioAtualizado.getNome()));
+        }
+
         log.info("[{}] - [UsuarioServiceImpl] - executando updateUser() id: {}", LocalDateTime.now(), id);
         var usuarioSalvo = getOne(id);
 

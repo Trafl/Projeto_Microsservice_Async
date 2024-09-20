@@ -15,6 +15,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Query("SELECT u FROM Usuario u WHERE u.eh_admin = true")
     List<Usuario> findAdmins();
 
+    boolean existsByNome(String nome);
+
     @Query("SELECT u FROM Usuario u WHERE u.nome = :nome")
     Optional<Usuario> findByNomeAndPassword(@Param("nome") String nome);
 }

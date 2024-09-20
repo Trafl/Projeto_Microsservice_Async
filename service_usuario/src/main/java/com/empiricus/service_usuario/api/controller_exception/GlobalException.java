@@ -1,5 +1,6 @@
 package com.empiricus.service_usuario.api.controller_exception;
 
+import com.empiricus.service_usuario.domain.exception.UsuarioExistException;
 import com.empiricus.service_usuario.domain.exception.UsuarioNotFoundException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.*;
@@ -62,6 +63,18 @@ public class GlobalException extends ResponseEntityExceptionHandler {
         problem.setProperty("timestamp", Instant.now());
 
         log.error("[{}] - [GlobalExeption] - UsuarioNotFoundException: {}", logTime, e.getMessage());
+        return problem;
+
+    }
+
+    @ExceptionHandler(UsuarioExistException.class)
+    ProblemDetail handlerUsuarioExistException(UsuarioExistException e) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+
+        problem.setTitle("Nome de usuario já registrado");
+        problem.setProperty("timestamp", Instant.now());
+
+        log.error("[{}] - [GlobalExeption] - UsuarioExistException: {}", logTime, e.getMessage());
         return problem;
 
     }

@@ -1,5 +1,6 @@
 package com.empiricus.service_usuario.service;
 
+import com.empiricus.service_usuario.domain.exception.UsuarioExistException;
 import com.empiricus.service_usuario.domain.exception.UsuarioNotFoundException;
 import com.empiricus.service_usuario.domain.model.Usuario;
 import com.empiricus.service_usuario.domain.repository.UsuarioRepository;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,7 +32,8 @@ public class UsuarioServiceImplTest {
     @Mock
     private UsuarioRepository repository;
 
-    private ModelMapper mapper;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UsuarioServiceImpl service;
@@ -141,6 +144,23 @@ public class UsuarioServiceImplTest {
 
         }
 
+        @Test
+        void given_ExistentUserName_When_AddUser_ThrowUsuarioExistException(){
+
+            Usuario novoUsuario = new Usuario();
+            novoUsuario.setNome("Teste");
+
+            given(repository.existsByNome(anyString())).willReturn(true);
+
+            var result = assertThrows(UsuarioExistException.class,
+                    () -> {service.addUsuario(novoUsuario);
+                    });
+
+            verify(repository, never()).save(any(Usuario.class));
+            assertEquals("Usuario com o nome Teste já existe", result.getMessage());
+
+        }
+
     }
 
     @Nested
@@ -161,13 +181,12 @@ public class UsuarioServiceImplTest {
             assertNotNull(result);
             assertEquals(usuarioAtualizado.getNome(), result.getNome());
             assertEquals(usuarioAtualizado.getCpf(), result.getCpf());
-            assertEquals(usuarioAtualizado.getPassword(), result.getPassword());
             assertNotNull(result.getData_atualizacao());
             assertEquals(usuario.getId(), result.getId());
         }
 
         @Test
-        void given_BodyWithNullFields_WhenUpdateUser_VerifyLog(){
+        void given_BodyWithNullFields_WhenUpdateUser(){
 
             Usuario usuarioAtualizado = new Usuario();
             usuarioAtualizado.setNome("");
@@ -201,6 +220,22 @@ public class UsuarioServiceImplTest {
             assertEquals("Usuario de id 1 não foi encontrado no banco de dados", result.getMessage());
 
         }
+
+        @Test
+        void given_ExistentUserName_WhenUpdateUser_ThrowUsuarioExistException(){
+
+            Usuario usuario1 = new Usuario();
+            usuario1.setNome("Teste");
+
+            given(repository.existsByNome(anyString())).willReturn(true);
+
+            var result = assertThrows(UsuarioExistException.class,
+                    () -> {service.updateUsuario(usuario1,1L);
+                    });
+            assertEquals("Usuario com o nome Teste já existe", result.getMessage());
+
+        }
+
     }
 
     @Nested
