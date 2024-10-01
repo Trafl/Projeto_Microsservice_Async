@@ -1,13 +1,13 @@
-# Sistema de Gestão de Usuários, Emails e Notificações
+# User, Email, and Notification Management System
 
-Este projeto é uma arquitetura de microsserviços composta pelos seguintes serviços:
-- **Usuário**: Gerencia os usuários, incluindo login e permissões.
-- **Email**: Gerencia emails associados aos usuários.
-- **Notificação**: Envia notificações aos administradores sobre eventos de email.
-- **Eureka Server**: Realiza o *service discovery*.
-- **API Gateway**: Intermedia chamadas entre microsserviços e controla o acesso aos endpoints com base nas permissões do usuário.
+This project is a microservices architecture composed of the following services:
+- **User**: Manages users, including login and permissions.
+- **Email**: Manages emails associated with users.
+- **Notification**: Sends notifications to administrators about email events.
+- **Eureka Server**: Performs service discovery.
+- **API Gateway**: Intermediates calls between microservices and controls access to endpoints based on user permissions.
 
-## Tecnologias Utilizadas
+## Technologies Used
 
 - **Java 17**
 - **Spring Boot**
@@ -26,11 +26,11 @@ Este projeto é uma arquitetura de microsserviços composta pelos seguintes serv
 - **Flyway**
 - **Jwt**
 
-## Estrutura de Serviços
+## Service Structure
 
-1. **Service-Usuario**
-    - Gerencia os dados dos usuários.
-    - Exemplo de tabela MySQL:
+1. **User Service**
+    - Manages user data.
+    - Example of a MySQL table:
     ```sql
     CREATE TABLE usuario (
         id INT PRIMARY KEY AUTO_INCREMENT,
@@ -43,9 +43,9 @@ Este projeto é uma arquitetura de microsserviços composta pelos seguintes serv
     );
     ```
 
-2. **Service-Email**
-    - Gerencia emails dos usuários.
-    - Exemplo de tabela MySQL:
+2. **Email Service**
+    - Manages users' emails.
+    - Example of a MySQL table:
     ```sql
     CREATE TABLE email (
         id INT PRIMARY KEY AUTO_INCREMENT,
@@ -56,27 +56,27 @@ Este projeto é uma arquitetura de microsserviços composta pelos seguintes serv
     );
     ```
 
-3. **Service-Notificacao**
-    - Envia notificações aos administradores sobre eventos relacionados a emails de forma assincrona.
+3. **Notification Service**
+    - Sends asynchronous notifications to administrators about email-related events.
     
-4. **Service-Discovery (Eureka Server)**
-    - Todos os microsserviços são registrados no Eureka.
+4. **Service Discovery (Eureka Server)**
+    - All microservices are registered with Eureka.
 
 5. **API Gateway**
-    - Controla o roteamento e a segurança das requisições.
+    - Controls routing and request security.
   
-6. **Kafka e Zookeper**
-    - Controla a conexão assincrona entre os serviços
-   **Obs: O Docker-compose na raiz do projeto e do Kafka** 
+6. **Kafka and Zookeeper**
+    - Manages asynchronous connections between services.
+    **Note: The Docker-compose file is located in the root of the project and for Kafka** 
 
-## Configuração do API Gateway
+## API Gateway Configuration
 
-O **API Gateway** roteia requisições para os microsserviços e aplica segurança com base no campo `eh_admin` na tabela **Usuário**.
+The **API Gateway** routes requests to microservices and enforces security based on the `eh_admin` field in the **User** table.
 
-### Regras de Segurança
+### Security Rules
 
-- Apenas usuários com `eh_admin = true` podem acessar endpoints de administração.
-- A segurança é configurada no Gateway para validar o token JWT e verificar a permissão.
+- Only users with `eh_admin = true` can access admin endpoints.
+- Security is configured in the Gateway to validate the JWT token and check permissions.
 
-## Documentação PostManCollection
-- https://documenter.getpostman.com/view/25729709/2sAXqnej4C
+## Postman Collection Documentation
+- [https://documenter.getpostman.com/view/25729709/2sAXqnej4C](https://documenter.getpostman.com/view/25729709/2sAXqnej4C)
